@@ -2,19 +2,27 @@ package _03_To_Do_List;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class ToDoList implements MouseListener {
+	JLabel j = new JLabel();
+	String text = "";
 	public static void main(String[] args) {
 		new ToDoList().UI();
 	}
-	JFrame frame = new JFrame();JPanel panel=new JPanel();JButton one = new JButton("add task");JButton two=new JButton("view tasks");JButton three=new JButton("remove task");JButton four=new JButton("save list");JButton five=new JButton("remove list");
+	JFrame frame = new JFrame();JPanel panel=new JPanel();JButton one = new JButton("add task");JButton two=new JButton("view tasks");JButton three=new JButton("remove task");JButton four=new JButton("save list");JButton five=new JButton("load list");
 	ArrayList<String>tasks = new ArrayList<String>();
 	/*
 	 * Create a program with five buttons, add task, view tasks, remove task, save list, and load list. 
@@ -47,18 +55,57 @@ public class ToDoList implements MouseListener {
 			String task = JOptionPane.showInputDialog("enter task");
 			tasks.add(task);
 		}else if(e.getSource()==two) {
+			text = "";
 			for (int i = 0; i < tasks.size(); i++) {
-				JLabel j = new JLabel();
-				j.setText(tasks.get(i));
+				text = text + " " + tasks.get(i);
+				j.setText(text);
 				System.out.println(tasks.get(i));
 				panel.add(j);
-				//frame.pack();
+				frame.pack();
 			}
 		}else if(e.getSource()==three) {
+			text = "";
+			for (int i = 0; i < tasks.size(); i++) {
+				text = text + " " + tasks.get(i);
+				j.setText(text);
+				System.out.println(tasks.get(i));
+				panel.add(j);
+				frame.pack();
+			}
+			String rem = JOptionPane.showInputDialog("starting with 0 for the first and counting updwards, which would you like to remove");
+			int remove = Integer.parseInt(rem);
+			tasks.remove(remove);
 			
 		}else if(e.getSource()==four) {
-			
-		}else if(e.getSource()==five) {
+			try {
+				FileWriter f = new FileWriter("src/thing.txt");
+				for (int i = 0; i < tasks.size(); i++) {
+					f.write(tasks.get(i) + "\n");
+				}
+				f.close();
+			} catch(IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		else if(e.getSource()==five) {
+			try {
+				BufferedReader br = new BufferedReader(new FileReader("src/thing.txt"));
+				
+				String line = br.readLine();
+				while(line != null){
+					System.out.println(line);
+					line = br.readLine();
+					tasks.add(line);
+				}
+				
+				br.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 		}
 		
